@@ -218,6 +218,12 @@ swift package clean
 swift build
 ```
 
+**PrivacyInfo.xcprivacy warning:**
+```
+warning: 'sqlite.swift': found 1 file(s) which are unhandled...
+```
+This warning from SQLite.swift dependency is harmless and can be safely ignored. It's related to Apple's privacy manifest requirements for third-party dependencies.
+
 ### Permission Issues
 
 **Accessibility permission denied:**
