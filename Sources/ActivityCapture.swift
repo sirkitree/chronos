@@ -2,7 +2,7 @@ import Foundation
 import AppKit
 import Cocoa
 
-class ActivityCapture {
+final class ActivityCapture: @unchecked Sendable {
     private let database: Database
     private let accessibilityCapture: AccessibilityCapture
     private var isMonitoring = false

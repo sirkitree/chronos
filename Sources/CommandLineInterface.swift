@@ -257,19 +257,14 @@ class CommandLineInterface {
             exit(0)
         }
         
-        // Run for specified duration
-        let startTime = Date()
-        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            let elapsed = Date().timeIntervalSince(startTime)
-            if elapsed >= duration {
-                timer.invalidate()
-                activityCapture.stopMonitoring()
-                print("Monitoring completed!")
-                exit(0)
-            }
+        // Run for specified duration using DispatchQueue.main.asyncAfter
+        let targetDuration = duration
+        DispatchQueue.main.asyncAfter(deadline: .now() + targetDuration) {
+            activityCapture.stopMonitoring()
+            print("Monitoring completed!")
+            exit(0)
         }
         
-        RunLoop.main.add(timer, forMode: .default)
         RunLoop.main.run()
     }
     
