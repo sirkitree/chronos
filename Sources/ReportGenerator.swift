@@ -236,7 +236,6 @@ enum AppCategory {
         // Distracting apps
         if lowercased.contains("safari") ||
            lowercased.contains("chrome") ||
-           lowercased.contains("firefox") ||
            lowercased.contains("youtube") ||
            lowercased.contains("netflix") ||
            lowercased.contains("slack") ||

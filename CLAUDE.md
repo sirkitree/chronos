@@ -13,7 +13,7 @@ Based on PRD.md, the system consists of:
 - **Activity Capture Engine**: Uses NSWorkspace APIs, Accessibility APIs, and JXA scripts
 - **Data Storage**: SQLite 3.40+ with optional SQLCipher encryption
 - **User Interfaces**: Terminal UI (TUI) and local web dashboard (localhost:9173)
-- **Browser Integration**: Native messaging extensions for Chrome/Firefox
+- **Browser Integration**: Native messaging extension for Chrome
 - **Permission Management**: Handles macOS Accessibility and Automation permissions
 
 ## Development Commands
@@ -43,10 +43,10 @@ sqlite3 chronoguard.db < schema.sql
 - **Resource Limits**: Must maintain <2% CPU usage and <150MB memory ceiling
 - **SQLite Schema**: Uses strict mode with timestamp-based activity events
 
-## Browser Extension Architecture
+## Chrome Extension Architecture
 
-The system requires native messaging between browser extensions and the main application:
-- Extensions capture tab URLs and titles
+The system requires native messaging between the Chrome extension and the main application:
+- Chrome extension captures tab URLs and titles
 - Native messaging protocol communicates with main app
 - Supports user-configurable include/exclude URL patterns
 

@@ -10,7 +10,7 @@ ChronoGuard is designed for privacy-conscious professionals who want to track th
 
 - **100% Local Processing**: All data stays on your device
 - **macOS Native**: Uses NSWorkspace and Accessibility APIs
-- **Browser Integration**: Chrome/Firefox extensions via native messaging
+- **Browser Integration**: Chrome extension via native messaging
 - **Encrypted Storage**: Optional AES-256 SQLite encryption
 - **Resource Efficient**: <2% CPU usage, <150MB memory
 - **Multiple Interfaces**: Terminal UI and web dashboard
@@ -39,8 +39,8 @@ ChronoGuard is designed for privacy-conscious professionals who want to track th
                                  ▼                        ▼
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │ Browser         │    │   Report Gen     │    │   Interfaces    │
-│ Extensions      │    │                  │    │ (TUI + Web UI)  │
-│ (Chrome/Firefox)│    └──────────────────┘    └─────────────────┘
+│ Extension       │    │                  │    │ (TUI + Web UI)  │
+│ (Chrome)        │    └──────────────────┘    └─────────────────┘
 └─────────────────┘
 ```
 

@@ -28,8 +28,7 @@
 |-----------|--------|---------------------|
 | Active App | `NSWorkspace.runningApplications` | None |
 | Window Title | Hybrid: `CGWindowList` + `AXUIElement` | Accessibility |
-| Safari Tabs | JXA scripts (`Application("Safari").windows[]`) | Automation |
-| Chrome/Firefox | Native messaging extension | User-installed |
+| Chrome Browser | Native messaging extension | User-installed |
 | Idle Detection | `CGEventSourceCounterForEventType()` | None |
 
 ### 2.2 Data Processing
@@ -70,11 +69,10 @@ chronoguard report --date=2025-06-24 --format=csv
 graph TD
   A[macOS Event Monitor] -->|NSWorkspace Notifications| B[Activity Capture]
   C[Accessibility API] --> B
-  D[JXA Engine] -->|Safari Data| B
-  E[Browser Extension] -->|Native Messaging| B
-  B --> F[SQLite Storage]
-  F --> G[Report Generator]
-  G --> H[TUI/Web UI]
+  D[Chrome Extension] -->|Native Messaging| B
+  B --> E[SQLite Storage]
+  E --> F[Report Generator]
+  F --> G[TUI/Web UI]
 ```
 
 ### 3.2 Permission Workflow
@@ -82,8 +80,7 @@ graph TD
 ```plaintext
 1. App launch → Check permissions
 2. Missing Accessibility? → Open System Settings pane
-3. Missing Automation? → Guide user through approval
-4. Browser tracking? → Prompt for extension install
+3. Chrome tracking? → Prompt for Chrome extension install
 ```
 
 ---
