@@ -49,6 +49,18 @@ class CommandLineInterface {
             return
         }
         
+        // Handle native messaging
+        if args.contains("--native-messaging") {
+            handleNativeMessaging()
+            return
+        }
+        
+        // Handle Chrome extension installation
+        if args.contains("--install-chrome-extension") {
+            handleChromeExtensionInstall()
+            return
+        }
+        
         // Default behavior - show help
         printUsage()
     }
@@ -261,6 +273,44 @@ class CommandLineInterface {
         RunLoop.main.run()
     }
     
+    private func handleNativeMessaging() {
+        print("Starting ChronoGuard native messaging host...")
+        
+        let nativeHost = NativeMessagingHost(database: database)
+        
+        // Set up signal handling for graceful shutdown
+        signal(SIGINT) { _ in
+            print("\nShutting down native messaging host...")
+            exit(0)
+        }
+        
+        signal(SIGTERM) { _ in
+            print("\nShutting down native messaging host...")
+            exit(0)
+        }
+        
+        // Start the native messaging host
+        nativeHost.startHost()
+    }
+    
+    private func handleChromeExtensionInstall() {
+        print("Installing Chrome extension native messaging manifest...")
+        
+        // Install the native messaging manifest
+        NativeMessagingManifest.installManifest()
+        
+        print("✅ Native messaging manifest installed")
+        print("")
+        print("Next steps:")
+        print("1. Install the Chrome extension from: ./chrome-extension/")
+        print("2. Load it as an unpacked extension in Chrome Developer Mode")
+        print("3. Grant any required permissions")
+        print("4. The extension will automatically connect to ChronoGuard")
+        print("")
+        print("To start the native messaging host:")
+        print("  chronoguard --native-messaging")
+    }
+    
     private func formatDuration(_ timeInterval: TimeInterval) -> String {
         let hours = Int(timeInterval) / 3600
         let minutes = (Int(timeInterval) % 3600) / 60
@@ -281,12 +331,14 @@ class CommandLineInterface {
         print("Usage: chronoguard [command] [options]")
         print()
         print("Commands:")
-        print("  monitor              Start activity monitoring")
-        print("  report               Generate activity reports")
-        print("  --setup-permissions  Setup required macOS permissions")
-        print("  --check-permissions  Check current permission status")
-        print("  --help, -h          Show this help message")
-        print("  --version, -v       Show version information")
+        print("  monitor                      Start activity monitoring")
+        print("  report                       Generate activity reports")
+        print("  --setup-permissions          Setup required macOS permissions")
+        print("  --check-permissions          Check current permission status")
+        print("  --native-messaging           Start native messaging host for Chrome extension")
+        print("  --install-chrome-extension   Install Chrome extension manifest")
+        print("  --help, -h                  Show this help message")
+        print("  --version, -v               Show version information")
         print()
         print("For more details, run: chronoguard --help")
     }
@@ -304,10 +356,16 @@ class CommandLineInterface {
         print("  --date DATE         Date in YYYY-MM-DD format (default: today)")
         print("  --format FORMAT     Output format: table, json, csv")
         print()
+        print("Chrome Extension:")
+        print("  --install-chrome-extension   Install native messaging manifest")
+        print("  --native-messaging           Start host for Chrome extension")
+        print()
         print("Examples:")
         print("  chronoguard monitor --duration 60")
         print("  chronoguard report --type daily --date 2025-06-27")
         print("  chronoguard report --type weekly --format json")
         print("  chronoguard report --type productivity --format csv")
+        print("  chronoguard --install-chrome-extension")
+        print("  chronoguard --native-messaging")
     }
 }
