@@ -61,6 +61,18 @@ class CommandLineInterface {
             return
         }
         
+        // Handle extension ID update
+        if let updateIndex = args.firstIndex(of: "--update-extension-id") {
+            if updateIndex + 1 < args.count {
+                let extensionId = args[updateIndex + 1]
+                handleUpdateExtensionId(extensionId)
+            } else {
+                print("Error: --update-extension-id requires an extension ID argument")
+                print("Usage: chronoguard --update-extension-id <extension-id>")
+            }
+            return
+        }
+        
         // Default behavior - show help
         printUsage()
     }
@@ -291,7 +303,7 @@ class CommandLineInterface {
     private func handleChromeExtensionInstall() {
         print("Installing Chrome extension native messaging manifest...")
         
-        // Install the native messaging manifest
+        // Install the native messaging manifest with wildcard for development
         NativeMessagingManifest.installManifest()
         
         print("✅ Native messaging manifest installed")
@@ -300,10 +312,53 @@ class CommandLineInterface {
         print("1. Install the Chrome extension from: ./chrome-extension/")
         print("2. Load it as an unpacked extension in Chrome Developer Mode")
         print("3. Grant any required permissions")
-        print("4. The extension will automatically connect to ChronoGuard")
+        print("4. Note the extension ID from chrome://extensions/")
+        print("5. Update manifest with: chronoguard --update-extension-id <extension-id>")
         print("")
         print("To start the native messaging host:")
         print("  chronoguard --native-messaging")
+        print("")
+        print("For development, the manifest uses wildcard origins.")
+        print("For production, update with specific extension ID.")
+    }
+    
+    private func handleUpdateExtensionId(_ extensionId: String) {
+        print("Updating native messaging manifest with extension ID: \(extensionId)")
+        
+        // Validate extension ID format (Chrome extension IDs are 32 characters)
+        let cleanId = extensionId.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard cleanId.count == 32, cleanId.allSatisfy({ $0.isLetter && $0.isLowercase }) else {
+            print("Error: Invalid extension ID format")
+            print("Extension IDs should be 32 lowercase letters (e.g., abcdefghijklmnopqrstuvwxyz123456)")
+            return
+        }
+        
+        // Generate and install manifest with specific extension ID
+        let manifest = NativeMessagingManifest.generateManifest(extensionId: cleanId)
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: manifest, options: .prettyPrinted)
+            
+            let homeDir = FileManager.default.homeDirectoryForCurrentUser
+            let manifestsDir = homeDir
+                .appendingPathComponent("Library")
+                .appendingPathComponent("Application Support")
+                .appendingPathComponent("Google")
+                .appendingPathComponent("Chrome")
+                .appendingPathComponent("NativeMessagingHosts")
+            
+            let manifestFile = manifestsDir.appendingPathComponent("com.chronoguard.native.json")
+            try jsonData.write(to: manifestFile)
+            
+            print("✅ Native messaging manifest updated with extension ID")
+            print("Manifest location: \(manifestFile.path)")
+            print("")
+            print("The extension should now be able to connect to ChronoGuard.")
+            print("Restart Chrome if the extension was already loaded.")
+            
+        } catch {
+            print("Error updating manifest: \(error)")
+        }
     }
     
     private func formatDuration(_ timeInterval: TimeInterval) -> String {
@@ -332,6 +387,7 @@ class CommandLineInterface {
         print("  --check-permissions          Check current permission status")
         print("  --native-messaging           Start native messaging host for Chrome extension")
         print("  --install-chrome-extension   Install Chrome extension manifest")
+        print("  --update-extension-id <id>   Update manifest with specific Chrome extension ID")
         print("  --help, -h                  Show this help message")
         print("  --version, -v               Show version information")
         print()
@@ -353,6 +409,7 @@ class CommandLineInterface {
         print()
         print("Chrome Extension:")
         print("  --install-chrome-extension   Install native messaging manifest")
+        print("  --update-extension-id <id>   Update manifest with extension ID")
         print("  --native-messaging           Start host for Chrome extension")
         print()
         print("Examples:")
@@ -361,6 +418,7 @@ class CommandLineInterface {
         print("  chronoguard report --type weekly --format json")
         print("  chronoguard report --type productivity --format csv")
         print("  chronoguard --install-chrome-extension")
+        print("  chronoguard --update-extension-id abcdefghijklmnopqrstuvwxyz123456")
         print("  chronoguard --native-messaging")
     }
 }

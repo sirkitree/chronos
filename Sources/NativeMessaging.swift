@@ -229,18 +229,24 @@ class NativeMessagingHost {
 
 // Native messaging manifest generator
 class NativeMessagingManifest {
-    static func generateManifest() -> [String: Any] {
+    static func generateManifest(extensionId: String? = nil) -> [String: Any] {
         // Get the path to the ChronoGuard executable
         let executablePath = ProcessInfo.processInfo.arguments[0]
+        
+        let allowedOrigins: [String]
+        if let extensionId = extensionId {
+            allowedOrigins = ["chrome-extension://\(extensionId)/"]
+        } else {
+            // Fallback: allow any unpacked extension (development only)
+            allowedOrigins = ["chrome-extension://*/"]
+        }
         
         return [
             "name": "com.chronoguard.native",
             "description": "ChronoGuard Native Messaging Host",
             "path": executablePath,
             "type": "stdio",
-            "allowed_origins": [
-                "chrome-extension://chronoguard-extension-id/"
-            ]
+            "allowed_origins": allowedOrigins
         ]
     }
     
