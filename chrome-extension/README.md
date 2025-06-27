@@ -138,6 +138,10 @@ Messages sent to ChronoGuard app:
 - **No External Dependencies**: Self-contained extension with no external API calls
 - **Privacy First**: Designed to never transmit data outside your device
 
+## Icons
+
+The extension includes basic placeholder icons. For better branding, you can replace the PNG files in the `icons/` directory with custom 16x16, 32x32, 48x48, and 128x128 pixel icons.
+
 ## Version History
 
 - **v0.1.0**: Initial release with basic tab tracking and native messaging
